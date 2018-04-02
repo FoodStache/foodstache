@@ -20,7 +20,7 @@ let allRecipes = (req, res) => {
 api.get('/recipes', allRecipes);
 
 router.use('/api', api);
-router.use('/', (req, res) => {
+router.get('/', (req, res) => {
   res.send('Hello!');
 });
 
