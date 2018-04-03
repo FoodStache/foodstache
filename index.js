@@ -74,7 +74,7 @@ let checkToken = async (req, res, next) => {
 
 const express = require('express');
 const Router = express.Router;
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 let app = express();
 let router = new Router();
@@ -102,6 +102,7 @@ let searchRecipes = (req, res) => {
 let postRecipe = (req, res) => {
   let body = req.body;
   console.log(body);
+  res.send(body);
 };
 
 api.get('/recipes', allRecipes);
@@ -113,9 +114,10 @@ router.get('/', (req, res) => {
 });
 
 router.use('/tokens', tokensAPI);
-router.use('/api', checkToken, api);
+router.use('/api', api);
 
-router.use((req, res, next) => { res.send('broken') });
-app.use(bodyParser.json());
+// router.use((req, res, next) => { res.send('broken') });
+app.use(express.json());
+app.use(express.urlencoded());
 app.use(router);
 app.listen(3000);

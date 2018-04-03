@@ -21,7 +21,7 @@ let handleFormSubmit = event => {
   //doSomething(data).then(doSomethingElse);
   //fetch with post and send to 'API/recipes'
   console.log(data);
-  fetch('api/recipes', {method: 'POST', body: JSON.stringify(data)})
+  fetch('/api/recipes', {method: 'POST', body: JSON.stringify(data)});
   };
 
 form.addEventListener('submit', handleFormSubmit);
