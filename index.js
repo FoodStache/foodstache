@@ -99,11 +99,17 @@ let searchRecipes = (req, res) => {
   });
 };
 
+let postRecipe = (req, res) => {
+  let body = req.body;
+  console.log(body);
+};
+
 api.get('/recipes', allRecipes);
 api.post('/recipes/search', searchRecipes);
+api.post('/recipes', postRecipe);
 
 router.get('/', (req, res) => {
-    res.send('Hello!');
+    res.sendFile(__dirname+'/index.html');
 });
 
 router.use('/tokens', tokensAPI);
