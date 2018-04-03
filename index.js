@@ -16,7 +16,7 @@ let createToken = user =>
         signature,
         { expiresIn: '7d' }
     );
-
+// POST /tokens/newUser
 let signUp = async (req, res, next) => {
     let { username, password, email, fname, lname } = req.body;
     try {
@@ -90,14 +90,17 @@ tokensAPI.post('/newUser', signUp);
 
 api.get('/recipes', allRecipes);
 
-router.get('/', (req, res) => {
-    res.send('Hello!');
-});
+// router.get('/', (req, res) => {
+  
+// });
 
 router.use('/tokens', tokensAPI);
 router.use('/api', checkToken, api);
 
-router.use((req, res, next) => { res.send('broken') });
+router.use((req, res, next) => { 
+  res.sendFile(__dirname + `/client${req.url}`);
+ });
+
 app.use(bodyParser.json());
 app.use(router);
 app.listen(3000);
