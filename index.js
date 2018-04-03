@@ -88,7 +88,19 @@ let api = new Router();
 api.get('/private', privatePage);
 tokensAPI.post('/newUser', signUp);
 
+let searchRecipes = (req, res) => {
+  let body = req.body;
+  console.log(body);
+  let queryParams = body["query"];
+  getSearch = db.searchRecipes(queryParams);
+  getSearch.then(results => {
+    console.log(results);
+    res.send(results);
+  });
+};
+
 api.get('/recipes', allRecipes);
+api.post('/recipes/search', searchRecipes);
 
 router.get('/', (req, res) => {
     res.send('Hello!');
