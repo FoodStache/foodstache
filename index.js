@@ -74,7 +74,6 @@ let checkToken = async (req, res, next) => {
 
 const express = require('express');
 const Router = express.Router;
-// const bodyParser = require('body-parser');
 
 let app = express();
 let router = new Router();
@@ -120,6 +119,7 @@ router.use((req, res, next) => {
   res.sendFile(__dirname + `/client${req.url}`);
  });
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded());
 app.use(router);
 app.listen(3000);
