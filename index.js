@@ -109,7 +109,7 @@ api.post('/recipes/search', searchRecipes);
 api.post('/recipes', postRecipe);
 
 router.get('/', (req, res) => {
-    res.sendFile(__dirname+'/index.html');
+    res.sendFile(__dirname+'/form.html');
 });
 
 router.use('/tokens', tokensAPI);
