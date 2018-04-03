@@ -62,7 +62,7 @@ CREATE TABLE public.recipes (
     id SERIAL PRIMARY KEY,
     title character varying NOT NULL,
     ver integer NOT NULL,
-    derived_id integer NOT NULL,
+    derived_id character varying NOT NULL,
     prepmins integer NOT NULL,
     image_id integer,
     createdon timestamp without time zone NOT NULL,
