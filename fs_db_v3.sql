@@ -1,0 +1,336 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.3
+-- Dumped by pg_dump version 10.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE TABLE public.images (
+    id integer NOT NULL,
+    createdon date NOT NULL,
+    link character varying NOT NULL,
+    recipe_id integer NOT NULL
+);
+
+
+ALTER TABLE public.images OWNER TO chrisgoodell;
+
+--
+-- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE SEQUENCE public.images_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.images_id_seq OWNER TO chrisgoodell;
+
+--
+-- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: chrisgoodell
+--
+
+ALTER SEQUENCE public.images_id_seq OWNED BY public.images.id;
+
+
+--
+-- Name: ratings; Type: TABLE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE TABLE public.ratings (
+    id integer NOT NULL,
+    rating_val integer NOT NULL,
+    recipe_id integer NOT NULL
+);
+
+
+ALTER TABLE public.ratings OWNER TO chrisgoodell;
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE SEQUENCE public.ratings_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ratings_id_seq OWNER TO chrisgoodell;
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: chrisgoodell
+--
+
+ALTER SEQUENCE public.ratings_id_seq OWNED BY public.ratings.id;
+
+
+--
+-- Name: recipes; Type: TABLE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE TABLE public.recipes (
+    id integer NOT NULL,
+    title character varying NOT NULL,
+    ver integer NOT NULL,
+    derived_id character varying NOT NULL,
+    prepmins integer NOT NULL,
+    image_id integer,
+    createdon timestamp without time zone NOT NULL,
+    descr character varying NOT NULL,
+    tag character varying,
+    user_id integer NOT NULL,
+    ingredients jsonb,
+    directions jsonb
+);
+
+
+ALTER TABLE public.recipes OWNER TO chrisgoodell;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE SEQUENCE public.recipes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.recipes_id_seq OWNER TO chrisgoodell;
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: chrisgoodell
+--
+
+ALTER SEQUENCE public.recipes_id_seq OWNED BY public.recipes.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying NOT NULL,
+    hpass character varying NOT NULL,
+    email character varying NOT NULL,
+    fname character varying NOT NULL,
+    lname character varying NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO chrisgoodell;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: chrisgoodell
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO chrisgoodell;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: chrisgoodell
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: images id; Type: DEFAULT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.images ALTER COLUMN id SET DEFAULT nextval('public.images_id_seq'::regclass);
+
+
+--
+-- Name: ratings id; Type: DEFAULT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.ratings ALTER COLUMN id SET DEFAULT nextval('public.ratings_id_seq'::regclass);
+
+
+--
+-- Name: recipes id; Type: DEFAULT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.recipes ALTER COLUMN id SET DEFAULT nextval('public.recipes_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: chrisgoodell
+--
+
+COPY public.images (id, createdon, link, recipe_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ratings; Type: TABLE DATA; Schema: public; Owner: chrisgoodell
+--
+
+COPY public.ratings (id, rating_val, recipe_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: recipes; Type: TABLE DATA; Schema: public; Owner: chrisgoodell
+--
+
+COPY public.recipes (id, title, ver, derived_id, prepmins, image_id, createdon, descr, tag, user_id, ingredients, directions) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: chrisgoodell
+--
+
+COPY public.users (id, username, hpass, email, fname, lname) FROM stdin;
+\.
+
+
+--
+-- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chrisgoodell
+--
+
+SELECT pg_catalog.setval('public.images_id_seq', 1, false);
+
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chrisgoodell
+--
+
+SELECT pg_catalog.setval('public.ratings_id_seq', 1, false);
+
+
+--
+-- Name: recipes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chrisgoodell
+--
+
+SELECT pg_catalog.setval('public.recipes_id_seq', 1, false);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chrisgoodell
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+
+
+--
+-- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ratings ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.ratings
+    ADD CONSTRAINT ratings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recipes recipes_pkey; Type: CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.recipes
+    ADD CONSTRAINT recipes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: images images_recipe_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT images_recipe_id_fkey FOREIGN KEY (recipe_id) REFERENCES public.recipes(id);
+
+
+--
+-- Name: ratings ratings_recipe_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.ratings
+    ADD CONSTRAINT ratings_recipe_id_fkey FOREIGN KEY (recipe_id) REFERENCES public.recipes(id);
+
+
+--
+-- Name: recipes recipes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: chrisgoodell
+--
+
+ALTER TABLE ONLY public.recipes
+    ADD CONSTRAINT recipes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
