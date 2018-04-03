@@ -1,40 +1,37 @@
 const bcrypt = require('bcrypt');
 const pg = require('pg-promise')();
-// const dbConfig = 'postgres://james@localhost:5432/jwt-einfach';
 const dbConfig = 'postgres://ubuntu@localhost:5432/foodstache';
 const db = pg(dbConfig);
 
 let getAllRecipes = () => db.query('SELECT * FROM recipes;');
 
-let generateWhere = (column, data) => {
-  // TODO: Functionalize string generation
-};
-
-let searchRecipes = (queryParams) => {
+let generateILike = (column, data) => {
   let whereString = "(";
-  queryParams.forEach((item, index) => {
-    whereString += `title ILIKE '%${item}%'`;
-    if (index !== queryParams.length - 1) {
-      whereString += ' OR ';
-    };
-  });
-  whereString += ') OR (';
-  queryParams.forEach((item, index) => {
-    whereString += `tag ILIKE '%${item}%'`;
-    if (index !== queryParams.length - 1) {
-      whereString += ' OR ';
-    };
-  });
-  whereString += ') OR (';
-  queryParams.forEach((item, index) => {
-    whereString += `ingredients @> '[{"item": "${item.toLowerCase()}"}]'`;
+  data.forEach((item, index) => {
+    whereString += `${column} ILIKE '%${item}%'`;
     if (index !== queryParams.length - 1) {
       whereString += ' OR ';
     };
   });
   whereString += ')';
-  console.log(whereString);
-  return db.query(`SELECT * FROM recipes WHERE ${whereString};`);
+  return whereString;
+};
+
+let searchRecipes = (queryParams) => {
+  let where = ""
+  where += generateILike('title', queryParams);
+  where += ') OR (';
+  where += generateILike('tag', queryParams);
+  where += ') OR (';
+  queryParams.forEach((item, index) => {
+    where += `ingredients @> '[{"item": "${item.toLowerCase()}"}]'`;
+    if (index !== queryParams.length - 1) {
+      where += ' OR ';
+    };
+  });
+  where += ')';
+  console.log(where);
+  return db.query(`SELECT * FROM recipes WHERE ${where};`);
 };
 
 let addNewUser = async (username, password, email, fname, lname) => {
