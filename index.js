@@ -16,7 +16,7 @@ let createToken = user =>
         signature,
         { expiresIn: '7d' }
     );
-
+// POST /tokens/newUser
 let signUp = async (req, res, next) => {
     let { username, password, email, fname, lname } = req.body;
     try {
@@ -108,15 +108,17 @@ api.get('/recipes', allRecipes);
 api.post('/recipes/search', searchRecipes);
 api.post('/recipes', postRecipe);
 
-router.get('/', (req, res) => {
-    // Point to the main .html file
-    res.sendFile(__dirname+'/form.html');
-});
+// router.get('/', (req, res) => {
+//     res.sendFile(__dirname+'/form.html');
+// });
 
 router.use('/tokens', tokensAPI);
 router.use('/api', api);
 
-router.use((req, res, next) => { res.sendFile(__dirname+'/'+req.url) });
+router.use((req, res, next) => { 
+  res.sendFile(__dirname + `/client${req.url}`);
+ });
+
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(router);
