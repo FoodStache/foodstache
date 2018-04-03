@@ -74,7 +74,7 @@ let checkToken = async (req, res, next) => {
 
 const express = require('express');
 const Router = express.Router;
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 let app = express();
 let router = new Router();
@@ -88,14 +88,33 @@ let api = new Router();
 api.get('/private', privatePage);
 tokensAPI.post('/newUser', signUp);
 
+let searchRecipes = (req, res) => {
+  let body = req.body;
+  console.log(body);
+  let queryParams = body["query"];
+  getSearch = db.searchRecipes(queryParams);
+  getSearch.then(results => {
+    console.log(results);
+    res.send(results);
+  });
+};
+
+let postRecipe = (req, res) => {
+  let body = req.body;
+  console.log(body);
+  res.send(body);
+};
+
 api.get('/recipes', allRecipes);
+api.post('/recipes/search', searchRecipes);
+api.post('/recipes', postRecipe);
 
 // router.get('/', (req, res) => {
-  
+//     res.sendFile(__dirname+'/form.html');
 // });
 
 router.use('/tokens', tokensAPI);
-router.use('/api', checkToken, api);
+router.use('/api', api);
 
 router.use((req, res, next) => { 
   res.sendFile(__dirname + `/client${req.url}`);

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Add a Recipe</title>
+</head>
+<body>
+	<h2>Add a Recipe</h2>
+		<form id="form_123" enctype="multipart/form-data" method="post" action="">
+			<ul>			
+				<li>
+					<label class="description" for="title">Title </label>
+					<div>
+						<input id="title" name="title" class="" type="text" maxlength="255" value=""/> 
+					</div> 
+				</li>		
+				
+				<li>
+					<label class="description" for="description">Description </label>
+					<div>
+						<textarea id="description" name="description" class=""></textarea> 
+					</div> 
+				</li>		
+				
+				<li>
+					<label class="description" for="image">Add an Image </label>
+					<div>
+						<input id="image" name="image" class="" type="file"/> 
+					</div>  
+				</li>		
+				
+				<li>
+					<label class="description" for="preptime">Prep Time (mins) </label>
+					<div>
+						<input id="preptime" name="preptime" class="" type="text" value=""/> 
+					</div>
+				</li>		
+				
+				<li>	
+					<label class="description" for="cooktime">Cook Time (mins) </label>
+					<div>
+						<input id="cooktime" name="cooktime" class="" type="text" value=""/> 
+					</div> 
+				</li>
+				
+				<li>
+					<label class="description" for="servings">Servings </label>
+					<div>
+						<input id="servings" name="servings" class="" type="text" value=""/> 
+					</div> 
+				</li>		
+				
+				<li>
+					<label class="description" for="ingredients">Ingredients </label>
+					<div>
+						<textarea id="ingredients" name="ingredients" class=""></textarea> 
+					</div>
+				</li>		
+				
+				<li>
+					<label class="description" for="directions">Directions </label>
+					<div>
+						<textarea id="directions" name="directions" class=""></textarea> 
+					</div>
+				</li>
+					
+				<li class="button">
+					<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
+				</li>
+			</ul>
+		</form>	
+		<div id="footer"></div>
+  </div>
+  <script src="form.js"></script>
+	</body>
+</html>
+
