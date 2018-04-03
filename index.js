@@ -100,4 +100,4 @@ router.use('/api', checkToken, api);
 router.use((req, res, next) => { res.send('broken') });
 app.use(bodyParser.json());
 app.use(router);
-app.listen(4001);
+app.listen(3000);
