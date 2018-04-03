@@ -4,6 +4,10 @@ const db = pg(dbConfig);
 
 let getAllRecipes = () => db.query('SELECT * FROM recipes;');
 
+let generateWhere = (column, data) => {
+  
+}
+
 let searchRecipes = (queryParams) => {
   let whereString = "(";
   queryParams.forEach((item, index) => {
@@ -21,7 +25,7 @@ let searchRecipes = (queryParams) => {
   });
   whereString += ') OR (';
   queryParams.forEach((item, index) => {
-    whereString += `ingredients @> 'item: ${item.toLowerCase()}'`;
+    whereString += `ingredients @> '[{"item": "${item.toLowerCase()}"}]'`;
     if (index !== queryParams.length - 1) {
       whereString += ' OR ';
     };
