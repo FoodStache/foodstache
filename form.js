@@ -23,5 +23,6 @@ let handleFormSubmit = event => {
   console.log(data);
   fetch('/api/recipes', {method: 'POST', body: JSON.stringify(data)});
   };
+  form.reset();
 
 form.addEventListener('submit', handleFormSubmit);
