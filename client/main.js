@@ -39,7 +39,7 @@ function loginForms() {
 
 function recipeGrid(recipes) {
     return `<section class = "items">
-            <div class="search-input"> 
+            <div id="searchbar" class="search-input"> 
             <input type="text" name="search" placeholder="Search..">
             </div>
             <div class="item-grid"> 
@@ -154,20 +154,20 @@ let wrapper = document.querySelector('.wrapper');
 
 
 
-    // let getData = (api) => {
-    //     let saveData = JSON.parse(localStorage.saveData || null) || {};
-    //     console.log(`retrieved local storage`)
-    //     let bearer = saveData.obj.token;
+// let getData = (api) => {
+//     let saveData = JSON.parse(localStorage.saveData || null) || {};
+//     console.log(`retrieved local storage`)
+//     let bearer = saveData.obj.token;
 
-    //     return fetch(`${server}${api}`, {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Authorization': 'bearer'
-    //         })
-    //     })
-    //     // .then((res) => (res.json()))
-    //     //     .catch((e) => { console.error(e) });
-    // };
+//     return fetch(`${server}${api}`, {
+//         method: 'GET',
+//         headers: new Headers({
+//             'Authorization': 'bearer'
+//         })
+//     })
+//     // .then((res) => (res.json()))
+//     //     .catch((e) => { console.error(e) });
+// };
 
 
 
@@ -176,7 +176,7 @@ let wrapper = document.querySelector('.wrapper');
 
 let server = 'http://localhost:3000';
 
-let getData = (api,token) => {
+let getData = (api, token) => {
     return fetch(`${server}${api}`, {
         method: 'GET',
         headers: new Headers({
@@ -210,8 +210,6 @@ document.addEventListener("DOMContentLoaded", async function  () {
     console.log('hi there');
     await renderPage('/api/recipes', recipesPage);
     addEventListeners();
-
-    
 });
 
 
@@ -219,16 +217,27 @@ document.addEventListener("DOMContentLoaded", async function  () {
 let renderPage = async (api, renderedPage) => {
     let token = getToken();
     if (token) {
+
     let response = await getData(api, token);
     console.log(response);
     recipeArray = response;
     wrapper.innerHTML = renderedPage(response);
-    
+        let searchBar = document.querySelector('#searchbar');
+        searchBar.addEventListener('keypress', event => {
+     if (event.code === 'Enter') {
+                searchValue = searchBar.querySelector('input').value;
+                console.log('ENTER pressed! Search: '+searchValue);
+                queryParams = searchValue.split(' ').join('+');
+                let getSearch = getData('/api/recipes/search?q='+queryParams, token);
+                getSearch.then(results => console.log(results));
+            };
+        });
+
     }
-    else { 
+    else {
         //render login page
-        wrapper.innerHTML = loginPage() 
-        
+        wrapper.innerHTML = loginPage()
+
         //login page specific script
         let regForm = document.querySelector('.register-form');
         let logForm = document.querySelector('.login-form');
@@ -244,13 +253,6 @@ let renderPage = async (api, renderedPage) => {
             console.log('sup you clicked me');
             regForm.classList.toggle('hide');
             logForm.classList.toggle('hide');
-        });
-    
-        let search = document.querySelector('.container .search');
-        search.addEventListener("click", function () {
-            console.log('search click');
-            let token = getToken();
-            getData('/api/private');
         });
 
         let handleFormSubmitReg = async event => {

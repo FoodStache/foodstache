@@ -5,6 +5,7 @@ const {
     getAllRecipes,
     getOneRecipe,
     searchRecipes,
+    addRecipe,
     findUserByEmail,
     addNewUser
 } = require('./database');
@@ -111,9 +112,24 @@ let searchForRecipes = (req, res) => {
 };
 
 let postRecipe = (req, res) => {
-    let body = req.body;
-    console.log(body);
-    res.send(body);
+  let body = req.body;
+  let recipe = {
+    title: body.title, ver: body.ver, derived_id: body.derived_id,
+    prepmins: body.prepmins, cookmins: body.cookmins,
+    createdon: body.createdon, descr: body.descr, tag: body.tag,
+    user_id: body.user_id, ingredients: body.ingredients,
+    directions: body.directions, servings: body.servings,
+    image_url: body.image_url
+    };
+  let insertRecipe = addRecipe(recipe);
+  insertRecipe.then(result => {
+    console.log(result);
+    res.send('Recipe posted');
+  })
+  .catch(error => {
+    console.log(error);
+    res.send(error);
+  });
 };
 
 api.get('/recipes', allRecipes);
