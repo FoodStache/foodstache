@@ -118,6 +118,7 @@ let postRecipe = (req, res) => {
   })
   .catch(error => {
     console.log(error);
+    res.send(error);
   });
 };
 
