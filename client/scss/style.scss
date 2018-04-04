@@ -168,16 +168,12 @@ section.items {
 
 
 
-
-
-
-
-
-
-
-
 section.recipe {
   margin: 0 10px;
+
+  img {
+    width: 100%;
+  }
 }
 
 .recipe-body {
@@ -212,12 +208,6 @@ section.recipe {
     padding-left: 25px;
   }
 } 
-
-
-
-
-
-
 
 
 .login-page {
