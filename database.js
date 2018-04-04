@@ -9,7 +9,7 @@ let generateILike = (column, data) => {
   let whereString = "(";
   data.forEach((item, index) => {
     whereString += `${column} ILIKE '%${item}%'`;
-    if (index !== queryParams.length - 1) {
+    if (index !== data.length - 1) {
       whereString += ' OR ';
     };
   });
@@ -20,9 +20,9 @@ let generateILike = (column, data) => {
 let searchRecipes = (queryParams) => {
   let where = ""
   where += generateILike('title', queryParams);
-  where += ') OR (';
+  where += ' OR ';
   where += generateILike('tag', queryParams);
-  where += ') OR (';
+  where += ' OR (';
   queryParams.forEach((item, index) => {
     where += `ingredients @> '[{"item": "${item.toLowerCase()}"}]'`;
     if (index !== queryParams.length - 1) {
