@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 
 const {
     getAllRecipes,
+    searchRecipes,
     addRecipe,
     findUserByEmail,
     addNewUser
@@ -22,9 +23,9 @@ let signUp = async (req, res, next) => {
     let { username, password, email, fname, lname } = req.body;
     try {
         await addNewUser(username, password, email, fname, lname);
-      res.json({ status: 'okay' });
+        res.json({ status: 'okay' });
     } catch (e) {
-        res.json({status: 'error'});
+        res.json({ status: 'error' });
     }
 };
 
@@ -38,9 +39,9 @@ let postTokens = async (req, res) => {
     let isValid = await bcrypt.compare(password, user.hpass);
     if (isValid) {
         let token = createToken(user);
-        res.json({token});
+        res.json({ token });
     } else {
-        res.json({status:'No token for you!'});
+        res.json({ status: 'No token for you!' });
     }
 };
 
@@ -90,15 +91,15 @@ let api = new Router();
 api.get('/private', privatePage);
 tokensAPI.post('/newUser', signUp);
 
-let searchRecipes = (req, res) => {
-  let body = req.body;
-  console.log(body);
-  let queryParams = body["query"];
-  getSearch = db.searchRecipes(queryParams);
-  getSearch.then(results => {
-    console.log(results);
-    res.send(results);
-  });
+let searchForRecipes = (req, res) => {
+    let queryRegex = /\?q=([a-zA-z0-9+]+)/;
+    let queryParams = queryRegex.exec(req.url)[1].split('+');
+    console.log(queryParams);
+    getSearch = searchRecipes(queryParams);
+    getSearch.then(results => {
+        console.log(results);
+        res.send(results);
+    });
 };
 
 let postRecipe = (req, res) => {
@@ -123,19 +124,15 @@ let postRecipe = (req, res) => {
 };
 
 api.get('/recipes', allRecipes);
-api.post('/recipes/search', searchRecipes);
+api.get('/recipes/search', searchForRecipes);
 api.post('/recipes', postRecipe);
-
-// router.get('/', (req, res) => {
-//     res.sendFile(__dirname+'/form.html');
-// });
 
 router.use('/tokens', tokensAPI);
 router.use('/api', api);
 
-router.use((req, res, next) => { 
-  res.sendFile(__dirname + `/client${req.url}`);
- });
+router.use((req, res, next) => {
+    res.sendFile(__dirname + `/client${req.url}`);
+});
 
 app.use(express.json());
 app.use(express.urlencoded());

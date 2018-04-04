@@ -58,30 +58,66 @@ function loginForms() {
 </div>`;
 }
 
-function recipeCard() {
+
+
+
+
+
+
+var allPosts = [
+    {
+        author: 'Brandon Smith',
+        title: 'A CSS Trick',
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    },
+    {
+        author: 'Chris Coyier',
+        title: 'Another CSS Trick',
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    },
+    {
+        author: 'Bob Saget',
+        title: 'A Home Video',
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    }
+]
+
+function BlogPost(postData) {
+    return `<div class="post">
+            <h1>${postData.title}</h1>
+            <h3>By ${postData.author}</h3>
+            <p>${postData.body}</p>
+          </div>`;
+}
+
+function BlogPostList(posts) {
+    return `<div class="blog-post-list">
+            ${posts.map(BlogPost).join('')}
+          </div>`
+}
+
+function recipeGrid(recipes) {
+    return `<section class = "items">
+            <div class="item-grid"> 
+            ${recipes.map(recipeCard).join('')}
+            </div>
+            </section>`;
+}
+
+function recipeCard(recipeData) {
     return `<div class=card>
             <div class="card-top">
-          <span>Spaghetti</span>
+          <span>${recipeData.title}</span>
           <img class="add-item" src="https://cdn3.iconfinder.com/data/icons/navigation-icons-1/32/add-512.png" />
         </div>
-        <img class = "item-hero" src="https://spicetrekkers.com//upload/recettes/spaghetti-berbere.jpg" />
+        <img class = "item-hero" src=${recipeData.image_url} />
         <div class="card-bottom">
         ${stars()}  
-          <div class="prep-time"> <img  src="https://cdn2.iconfinder.com/data/icons/pittogrammi/142/10-512.png"/> <span > 30m </span></div>
+          <div class="prep-time"> <img  src="https://cdn2.iconfinder.com/data/icons/pittogrammi/142/10-512.png"/> <span > ${recipeData.prepmins}m </span></div>
         </div>
         </div>`;
 }
 
-function recipeGrid() {
-    return `<section class = "items">
-            <div class="item-grid"> 
-            ${recipeCard()}
-            ${recipeCard()}
-            ${recipeCard()}
-            ${recipeCard()}
-            </div>
-            </section>`;
-}
 
 function stars() {
     return `<div class="stars" data-stars="1">
@@ -145,9 +181,9 @@ function recipeElements() {
     </section>`;
 }
 
-function recipesPage() {
+function recipesPage(recipeData) {
     return `${Header()}
-            ${recipeGrid()}`;
+            ${recipeGrid(recipeData)}`;
 }
 
 function loginPage() {
@@ -166,128 +202,169 @@ function viewRecipe() {
 }
 
 
-let saveData = JSON.parse(localStorage.saveData || null) || {};
-console.log(`retrieved local storage`)
-console.log(saveData.obj.token);
+// let saveData = JSON.parse(localStorage.saveData || null) || {};
+// console.log(`retrieved local storage`)
 let wrapper = document.querySelector('.wrapper');
 
-if (saveData.obj.token === null) {
-    
-    wrapper.innerHTML = loginPage();
-
-    let regForm = document.querySelector('.register-form');
-    let logForm = document.querySelector('.login-form');
-
-    let regBtn = logForm.querySelector('.message .reg');
-    let logBtn = regForm.querySelector('.message .log');
-
-    regBtn.addEventListener("click", function () {
-        console.log('sup you clicked me');
-        logForm.classList.toggle('hide');
-        regForm.classList.toggle('hide');
-    });
-    logBtn.addEventListener("click", function () {
-        console.log('sup you clicked me');
-        regForm.classList.toggle('hide');
-        logForm.classList.toggle('hide');
-    });
 
 
-    let isValidElement = element => element.name && element.value;
-    let isValidValue = element => !['checkbox', 'radio'].includes(element.type) || element.checked;
-    let isCheckbox = element => element.type === 'checkbox';
-
-    let formToJSON = elements => [].reduce.call(elements, (data, element) => {
-
-        if (isValidElement(element) && isValidValue(element)) {
-            if (isCheckbox(element)) {
-                data[element.name] = (data[element.name] || []).concat(element.value);
-            } else {
-                console.log(element.value);
-                data[element.name] = element.value;
-            }
-        }
-
-        return data;
-    }, {});
-
-    let handleFormSubmitReg = async event => {
-        event.preventDefault();
-        let data = formToJSON(regForm.elements);
-        console.log(data);
-        let res = await postData('/tokens/newUser', data);
-        console.log(res);
-    };
-
-    let handleFormSubmitLog = async event => {
-        event.preventDefault();
-        let data = formToJSON(logForm.elements);
-        console.log(data);
-        let res = await postData('/tokens', data);
-        let token = res.token;
-        //save to local storage
-        saveToLocal(res);
-        let saveData = JSON.parse(localStorage.saveData || null) || {};
-        console.log(`retrieved local storage`)
-        console.log(saveData.obj.token);
-
-    };
-
-    // Store your data.
-    function saveToLocal(obj) {
-        saveData.obj = obj;
-        saveData.time = new Date().getTime();
-        localStorage.saveData = JSON.stringify(saveData);
-    }
-
-    // Do something with your data.
-    function loadStuff() {
-        return saveData.obj || "default";
-    }
-
-    logForm.addEventListener('submit', handleFormSubmitLog);
-    regForm.addEventListener('submit', handleFormSubmitReg);
 
 
-    let server = 'http://localhost:3000';
 
-    let postData = (api, data) => {
-        return fetch(`${server}${api}`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        }).then((res) => (res.json()))
-            .catch((e) => { console.error(e) });
-    };
+    // let getData = (api) => {
+    //     let saveData = JSON.parse(localStorage.saveData || null) || {};
+    //     console.log(`retrieved local storage`)
+    //     let bearer = saveData.obj.token;
 
-    let search = document.querySelector('.container .search');
+    //     return fetch(`${server}${api}`, {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Authorization': 'bearer'
+    //         })
+    //     })
+    //     // .then((res) => (res.json()))
+    //     //     .catch((e) => { console.error(e) });
+    // };
 
-    search.addEventListener("click", function () {
-        console.log('search click');
-        getData('/api/private');
-    });
 
-    let getData = (api) => {
-        let saveData = JSON.parse(localStorage.saveData || null) || {};
-        console.log(`retrieved local storage`)
-        let bearer = saveData.obj.token;
 
-        return fetch(`${server}${api}`, {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': 'bearer'
-            })
+
+
+
+let server = 'http://localhost:3000';
+
+let getData = (api,token) => {
+    return fetch(`${server}${api}`, {
+        method: 'GET',
+        headers: new Headers({
+            'Authorization': token
         })
-        // .then((res) => (res.json()))
-        //     .catch((e) => { console.error(e) });
-    };
+    }).then((res) => (res.json()))
+        .catch((e) => { console.error(e) });
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log('hi there');
+    renderPage('/api/recipes', recipesPage);
+    
+});
 
 
-}
-else {
-    wrapper.innerHTML = recipesPage();
-}
 
+let renderPage = async (api, renderedPage) => {
+    let token = getToken();
+    if (token) {
+    let response = await getData(api, token);
+    console.log(response);
+    wrapper.innerHTML = renderedPage(response);
+
+    }
+    else { 
+        //render login page
+        wrapper.innerHTML = loginPage() 
+        
+        //login page specific script
+        let regForm = document.querySelector('.register-form');
+        let logForm = document.querySelector('.login-form');
+        let regBtn = logForm.querySelector('.message .reg');
+        let logBtn = regForm.querySelector('.message .log');
+
+        regBtn.addEventListener("click", function () {
+            console.log('sup you clicked me');
+            logForm.classList.toggle('hide');
+            regForm.classList.toggle('hide');
+        });
+        logBtn.addEventListener("click", function () {
+            console.log('sup you clicked me');
+            regForm.classList.toggle('hide');
+            logForm.classList.toggle('hide');
+        });
+    
+        let search = document.querySelector('.container .search');
+        search.addEventListener("click", function () {
+            console.log('search click');
+            let token = getToken();
+            getData('/api/private');
+        });
+
+        let handleFormSubmitReg = async event => {
+            event.preventDefault();
+            let data = formToJSON(regForm.elements);
+            console.log(data);
+            let res = await postData('/tokens/newUser', data);
+            console.log(res);
+        };
+
+        let handleFormSubmitLog = async event => {
+            event.preventDefault();
+            let data = formToJSON(logForm.elements);
+            console.log(data);
+            let res = await postData('/tokens', data);
+            let token = res.token;
+            //save to local storage
+            token = JSON.stringify(res);
+            localStorage.setItem('token', token);
+            console.log(token);
+            let response = await getData(api, token);
+            console.log(response);
+            wrapper.innerHTML = renderedPage();
+
+        };
+        logForm.addEventListener('submit', handleFormSubmitLog);
+        regForm.addEventListener('submit', handleFormSubmitReg);
+
+    }
+};
+
+let getToken = () => {
+    let tokenStored = localStorage.getItem('token');
+    if (tokenStored !== null) {
+        console.log(`retrieved local storage`)
+        tokenStored = JSON.parse(tokenStored);
+        tokenStored = tokenStored.token
+        console.log(tokenStored);
+        return tokenStored;
+    }
+    else { return false; }
+};
+
+
+
+
+
+
+
+
+
+
+
+// Stuff for login page
+
+let isValidElement = element => element.name && element.value;
+let isValidValue = element => !['checkbox', 'radio'].includes(element.type) || element.checked;
+let isCheckbox = element => element.type === 'checkbox';
+
+let formToJSON = elements => [].reduce.call(elements, (data, element) => {
+    if (isValidElement(element) && isValidValue(element)) {
+        if (isCheckbox(element)) {
+            data[element.name] = (data[element.name] || []).concat(element.value);
+        } else {
+            console.log(element.value);
+            data[element.name] = element.value;
+        }
+    }
+    return data;
+}, {});
+
+// api call for logging in
+let postData = (api, data) => {
+    return fetch(`${server}${api}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    }).then((res) => (res.json()))
+        .catch((e) => { console.error(e) });
+};
 
