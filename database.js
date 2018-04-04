@@ -5,6 +5,8 @@ const db = pg(dbConfig);
 
 let getAllRecipes = () => db.query('SELECT * FROM recipes;');
 
+let getOneRecipe = () => db.query(`SELECT * FROM recipes WHERE id = ${id}`);
+
 let generateILike = (column, data) => {
   let whereString = "(";
   data.forEach((item, index) => {
@@ -45,6 +47,7 @@ let findUserByEmail = async (email) => {
 
 module.exports = {
   getAllRecipes,
+  getOneRecipe,
   searchRecipes,
   findUserByEmail,
   addNewUser

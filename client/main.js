@@ -1,26 +1,5 @@
 
-
-
-var blogPost = {
-    author: 'James',
-    title: 'cool stuff',
-    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-};
-
-function BlogPost(postData) {
-    return `<div class="post">
-            <h1>${postData.title}</h1>
-            <h3>By ${postData.author}</h3>
-            <p>${postData.body}</p>
-          </div>`;
-}
-
-function PostPage(postData) {
-    return `<div class="page">
-            ${Header()}
-            ${BlogPost(postData)}
-          </div>`;
-}
+let recipeArray = [];
 
 function Header() {
     return `<header class="container">
@@ -58,46 +37,11 @@ function loginForms() {
 </div>`;
 }
 
-
-
-
-
-
-
-var allPosts = [
-    {
-        author: 'Brandon Smith',
-        title: 'A CSS Trick',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    },
-    {
-        author: 'Chris Coyier',
-        title: 'Another CSS Trick',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    },
-    {
-        author: 'Bob Saget',
-        title: 'A Home Video',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }
-]
-
-function BlogPost(postData) {
-    return `<div class="post">
-            <h1>${postData.title}</h1>
-            <h3>By ${postData.author}</h3>
-            <p>${postData.body}</p>
-          </div>`;
-}
-
-function BlogPostList(posts) {
-    return `<div class="blog-post-list">
-            ${posts.map(BlogPost).join('')}
-          </div>`
-}
-
 function recipeGrid(recipes) {
     return `<section class = "items">
+            <div class="search-input"> 
+            <input type="text" name="search" placeholder="Search..">
+            </div>
             <div class="item-grid"> 
             ${recipes.map(recipeCard).join('')}
             </div>
@@ -105,7 +49,7 @@ function recipeGrid(recipes) {
 }
 
 function recipeCard(recipeData) {
-    return `<div class=card>
+    return `<div class="card" data-id="${recipeData.id}">
             <div class="card-top">
           <span>${recipeData.title}</span>
           <img class="add-item" src="https://cdn3.iconfinder.com/data/icons/navigation-icons-1/32/add-512.png" />
@@ -117,7 +61,6 @@ function recipeCard(recipeData) {
         </div>
         </div>`;
 }
-
 
 function stars() {
     return `<div class="stars" data-stars="1">
@@ -153,12 +96,12 @@ function formSelect() {
       </div>
     </form>`;
 }
-
-function recipeElements() {
+// ${ for item in recipeData.ingredients}
+function recipeElements(recipeData) {
     return `<section class="recipe">
-    <h2>Spaghetti</h2>
-    <p>James McDowell</p>
-    <img class = "item-hero" src="https://spicetrekkers.com//upload/recettes/spaghetti-berbere.jpg" />
+    <h2>${recipeData.title}</h2>
+    <p>id user: ${recipeData.user_id}</p>
+    <img class = "item-hero" src="${recipeData.image_url}" />
     <div class="button-container">
     ${formSelect()} 
     ${formSelect()} 
@@ -196,9 +139,9 @@ function loginPage() {
             ${loginForms()}`;
 }
 
-function viewRecipe() {
+function viewRecipe(recipeData) {
     return `${Header()}
-            ${recipeElements()}`;
+            ${recipeElements(recipeData)}`;
 }
 
 
@@ -239,13 +182,35 @@ let getData = (api,token) => {
         headers: new Headers({
             'Authorization': token
         })
-    }).then((res) => (res.json()))
+    }).then((res) => (res.json() ))
         .catch((e) => { console.error(e) });
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+let addEventListeners =  () => {
+    let cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        console.log('hi');
+        card.addEventListener('click', e => {
+            let id = card.dataset.id;
+            id = parseInt(id, 10);
+            console.log(id);
+            //WIP api call for single recipe
+            // renderPage(`/api/recipes/${id}`, viewRecipe);
+            console.log(recipeArray);
+            var result = recipeArray.filter(function (obj) { return obj.id == `${id}`; })[0];
+            console.log(result);
+            wrapper.innerHTML = viewRecipe(result);
+        })
+    });
+};
+
+
+
+document.addEventListener("DOMContentLoaded", async function  () {
     console.log('hi there');
-    renderPage('/api/recipes', recipesPage);
+    await renderPage('/api/recipes', recipesPage);
+    addEventListeners();
+
     
 });
 
@@ -256,8 +221,9 @@ let renderPage = async (api, renderedPage) => {
     if (token) {
     let response = await getData(api, token);
     console.log(response);
+    recipeArray = response;
     wrapper.innerHTML = renderedPage(response);
-
+    
     }
     else { 
         //render login page
@@ -307,7 +273,9 @@ let renderPage = async (api, renderedPage) => {
             console.log(token);
             let response = await getData(api, token);
             console.log(response);
-            wrapper.innerHTML = renderedPage();
+            recipeArray = response;
+            wrapper.innerHTML = renderedPage(response);
+            addEventListeners();
 
         };
         logForm.addEventListener('submit', handleFormSubmitLog);
