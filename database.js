@@ -34,6 +34,19 @@ let searchRecipes = (queryParams) => {
   return db.query(`SELECT * FROM recipes WHERE ${where};`);
 };
 
+let addRecipe = (recipe) => {
+  console.log(recipe);
+  let { title, ver, derived_id, prepmins, cookmins, createdon, descr,
+  tag, user_id, ingredients, directions, servings, image_url } = recipe;
+  return db.query(`INSERT INTO recipes
+    (title, ver, derived_id, prepmins, cookmins, createdon,
+    descr, tag, user_id, ingredients, directions, servings, image_url)
+    VALUES ('${title}', ${ver}, '${derived_id}', ${prepmins},
+    ${cookmins}, '${createdon}', '${descr}', '${tag}', ${user_id},
+    '${JSON.stringify(ingredients)}', '${JSON.stringify(directions)}',
+    ${servings}, '${image_url}');`);
+};
+
 let addNewUser = async (username, password, email, fname, lname) => {
   let hpass = await bcrypt.hash(password, 10);
   return db.query(`INSERT INTO users (username, hpass, email, fname, lname) VALUES ('${username}', '${hpass}', '${email}', '${fname}', '${lname}')`);
@@ -46,6 +59,7 @@ let findUserByEmail = async (email) => {
 module.exports = {
   getAllRecipes,
   searchRecipes,
+  addRecipe,
   findUserByEmail,
   addNewUser
 };
