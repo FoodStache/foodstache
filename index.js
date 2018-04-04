@@ -21,30 +21,32 @@ let signUp = async (req, res, next) => {
     let { username, password, email, fname, lname } = req.body;
     try {
         await addNewUser(username, password, email, fname, lname);
-        res.send('okay');
+      res.json({ status: 'okay' });
     } catch (e) {
-        res.send('error');
+        res.json({status: 'error'});
     }
 };
 
 // POST /tokens
 let postTokens = async (req, res) => {
     let { email, password } = req.body;
+    console.log('Im here');
     let user = await findUserByEmail(email);
     user = user[0];
     console.log(user);
     let isValid = await bcrypt.compare(password, user.hpass);
     if (isValid) {
         let token = createToken(user);
-        res.send(token);
+        res.json({token});
     } else {
-        res.send('No token for you!');
+        res.json({status:'No token for you!'});
     }
 };
 
 // GET /api/private
 let privatePage = (req, res) => {
-    res.send(`Welcome to the club, user #${req.jwt.userId}`);
+    // res.send(`Welcome to the club, user #${req.jwt.userId}`);
+    res.send('sup dude you are logged in');
 };
 
 // GET /api/recipes
