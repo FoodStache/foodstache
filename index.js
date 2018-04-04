@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 
 const {
     getAllRecipes,
+    getOneRecipe,
     searchRecipes,
     addRecipe,
     findUserByEmail,
@@ -53,11 +54,19 @@ let privatePage = (req, res) => {
 
 // GET /api/recipes
 let allRecipes = (req, res) => {
-    getAll = getAllRecipes();
+    let getAll = getAllRecipes();
     getAll.then(results => {
         console.log(results);
         res.send(results);
     });
+};
+
+let oneRecipe = (req, res) => {
+  let getOne = getOneRecipe();
+  getOne.then(result => {
+    console.log(result);
+    res.send(result);
+  });
 };
 //verify token middleware before accessing api route
 let checkToken = async (req, res, next) => {
@@ -124,6 +133,7 @@ let postRecipe = (req, res) => {
 };
 
 api.get('/recipes', allRecipes);
+api.get('recipes/:id([0-9]+)', oneRecipe);
 api.get('/recipes/search', searchForRecipes);
 api.post('/recipes', postRecipe);
 
